@@ -1,6 +1,6 @@
 ﻿using CryptoExchange.Net;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
+using Microsoft.Extensions.Logging;
 using Valr.Net.Endpoints.SpotApi;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.SpotApi;
@@ -10,13 +10,13 @@ namespace Valr.Net.Clients.SpotApi
 {
     public class ValrClientSpotApiTrading : IValrClientSpotApiTrading
     {
-        private readonly Log _log;
+        private readonly ILogger _logger;
         private readonly ValrClientSpotApi _baseClient;
 
-        internal ValrClientSpotApiTrading(Log log, ValrClientSpotApi valrClientSpotApi)
+        internal ValrClientSpotApiTrading(ILogger logger, ValrClientSpotApi valrClientSpotApi)
         {
             _baseClient = valrClientSpotApi;
-            _log = log;
+            _logger = logger;
         }
 
         /// <inheritdoc />

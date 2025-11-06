@@ -38,9 +38,9 @@ namespace Valr.Net.Clients
         /// <param name="options">The options to use for this client</param>
         public ValrClient(ValrClientOptions options) : base("Valr", options)
         {
-            GeneralApi = AddApiClient(new ValrClientGeneralApi(log, this, options));
-            SpotApi = AddApiClient(new ValrClientSpotApi(log, this, options));
-            PaymentApi = AddApiClient(new ValrClientPayApi(log, this, options));
+            GeneralApi = AddApiClient(new ValrClientGeneralApi(_logger, this, options));
+            SpotApi = AddApiClient(new ValrClientSpotApi(_logger, this, options));
+            PaymentApi = AddApiClient(new ValrClientPayApi(_logger, this, options));
 
             //requestBodyEmptyContent = "";
             //requestBodyFormat = RequestBodyFormat.Json;

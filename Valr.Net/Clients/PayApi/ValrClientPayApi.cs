@@ -1,6 +1,5 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using Valr.Net.Clients.SpotApi;
@@ -12,7 +11,6 @@ namespace Valr.Net.Clients.PayApi
     public class ValrClientPayApi : RestApiClient, IValrClientPayApi
     {
         #region fields
-        private readonly Log _log;
         private readonly ValrClient _baseClient;
         internal new readonly ValrClientOptions Options;
         #endregion
@@ -23,13 +21,12 @@ namespace Valr.Net.Clients.PayApi
         #endregion
 
         #region constructor/destructor
-        public ValrClientPayApi(Log log, ValrClient baseClient, ValrClientOptions options) : base(options, options.PayApiOptions)
+        public ValrClientPayApi(ILogger logger, ValrClient baseClient, ValrClientOptions options) : base(logger, options, options.PayApiOptions)
         {
             Options = options;
             _baseClient = baseClient;
-            _log = log;
 
-            VarlPay = new ValrClientPayApiValrPay(log, this);
+            VarlPay = new ValrClientPayApiValrPay(_logger, this);
         }
         #endregion
 
@@ -45,14 +42,14 @@ namespace Valr.Net.Clients.PayApi
             var result = await _baseClient.SendRequestInternal<T>(this, uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit: ignoreRateLimit).ConfigureAwait(false);
             if (!result && result.Error!.Code == -1021 && Options.SpotApiOptions.AutoTimestamp)
             {
-                _log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 ValrClientSpotApi.TimeSyncState.LastSyncTime = DateTime.MinValue;
             }
             return result;
         }
 
         protected override TimeSyncInfo GetTimeSyncInfo() =>
-            new TimeSyncInfo(_log, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, ValrClientSpotApi.TimeSyncState);
+            new TimeSyncInfo(_logger, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, ValrClientSpotApi.TimeSyncState);
 
         public override TimeSpan GetTimeOffset() => ValrClientSpotApi.TimeSyncState.TimeOffset;
 

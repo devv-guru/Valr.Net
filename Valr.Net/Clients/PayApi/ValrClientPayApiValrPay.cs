@@ -1,6 +1,6 @@
 ﻿using CryptoExchange.Net;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
+using Microsoft.Extensions.Logging;
 using Valr.Net.Endpoints.PayApi;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.PayApi;
@@ -10,12 +10,12 @@ namespace Valr.Net.Clients.PayApi
 {
     public class ValrClientPayApiValrPay : IValrClientPayApiValrPay
     {
-        private readonly Log _log;
+        private readonly ILogger _logger;
         private readonly ValrClientPayApi _baseClient;
 
-        internal ValrClientPayApiValrPay(Log log, ValrClientPayApi valrClientPayApi)
+        internal ValrClientPayApiValrPay(ILogger logger, ValrClientPayApi valrClientPayApi)
         {
-            _log = log;
+            _logger = logger;
             _baseClient = valrClientPayApi;
         }
 

@@ -1,6 +1,5 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using Valr.Net.Clients.GeneralApi.Wallets;
@@ -14,7 +13,6 @@ namespace Valr.Net.Clients.GeneralApi
     public class ValrClientGeneralApi : RestApiClient, IValrClientGeneralApi
     {
         #region Fields
-        private readonly Log _log;
         private readonly ValrClient _baseClient;
         internal new readonly ValrClientOptions Options;
         #endregion
@@ -34,16 +32,15 @@ namespace Valr.Net.Clients.GeneralApi
         #endregion
 
         #region constructor/destructor
-        public ValrClientGeneralApi(Log log, ValrClient baseClient, ValrClientOptions options) : base(options, options.SpotApiOptions)
+        public ValrClientGeneralApi(ILogger logger, ValrClient baseClient, ValrClientOptions options) : base(logger, options, options.SpotApiOptions)
         {
             Options = options;
             _baseClient = baseClient;
-            _log = log;
 
-            ExchangeData = new ValrClientGeneralApiExchangeData(log, this);
-            Account = new ValrClientGeneralApiAccount(log, this);
-            Wallet = new ValrClientGeneralApiWallets(log, this);
-            SubAccount = new ValrClientGeneralApiSubAccount(log, this);
+            ExchangeData = new ValrClientGeneralApiExchangeData(_logger, this);
+            Account = new ValrClientGeneralApiAccount(_logger, this);
+            Wallet = new ValrClientGeneralApiWallets(_logger, this);
+            SubAccount = new ValrClientGeneralApiSubAccount(_logger, this);
         }
 
         #endregion
@@ -61,14 +58,14 @@ namespace Valr.Net.Clients.GeneralApi
             var result = await _baseClient.SendRequestInternal<T>(this, uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit: ignoreRateLimit).ConfigureAwait(false);
             if (!result && result.Error!.Code == -1021 && Options.SpotApiOptions.AutoTimestamp)
             {
-                _log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 ValrClientSpotApi.TimeSyncState.LastSyncTime = DateTime.MinValue;
             }
             return result;
         }
 
         protected override TimeSyncInfo GetTimeSyncInfo() =>
-            new(_log, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, ValrClientSpotApi.TimeSyncState);
+            new(_logger, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, ValrClientSpotApi.TimeSyncState);
 
         public override TimeSpan GetTimeOffset() => ValrClientSpotApi.TimeSyncState.TimeOffset;
 

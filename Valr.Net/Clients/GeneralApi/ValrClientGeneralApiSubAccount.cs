@@ -1,6 +1,6 @@
 ﻿using CryptoExchange.Net;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
+using Microsoft.Extensions.Logging;
 using Valr.Net.Endpoints.GeneralApi;
 using Valr.Net.Interfaces.Clients.GeneralApi;
 using Valr.Net.Objects.Models.General.SubAccount;
@@ -9,12 +9,12 @@ namespace Valr.Net.Clients.GeneralApi
 {
     public class ValrClientGeneralApiSubAccount : IValrClientGeneralApiSubAccount
     {
-        private readonly Log _log;
+        private readonly ILogger _logger;
         private readonly ValrClientGeneralApi _baseClient;
 
-        internal ValrClientGeneralApiSubAccount(Log log, ValrClientGeneralApi valrClientGeneralApi)
+        internal ValrClientGeneralApiSubAccount(ILogger logger, ValrClientGeneralApi valrClientGeneralApi)
         {
-            _log = log;
+            _logger = logger;
             _baseClient = valrClientGeneralApi;
         }
 
