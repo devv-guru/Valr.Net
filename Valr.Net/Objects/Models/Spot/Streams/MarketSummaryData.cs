@@ -1,37 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Spot.Streams
 {
     public class MarketSummaryData
     {
-        [JsonProperty("currencyPairSymbol")]
+        [JsonPropertyName("currencyPairSymbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("askPrice")]
+        [JsonPropertyName("askPrice")]
         public decimal Ask { get; set; }
 
-        [JsonProperty("bidPrice")]
+        [JsonPropertyName("bidPrice")]
         public decimal Bid { get; set; }
 
-        [JsonProperty("lastTradedPrice")]
+        [JsonPropertyName("lastTradedPrice")]
         public decimal LastTraded { get; set; }
 
-        [JsonProperty("previousClosePrice")]
+        [JsonPropertyName("previousClosePrice")]
         public decimal PreviousClose { get; set; }
 
-        [JsonProperty("baseVolume")]
+        [JsonPropertyName("baseVolume")]
         public decimal BaseVolume { get; set; }
 
-        [JsonProperty("highPrice")]
+        [JsonPropertyName("highPrice")]
         public decimal High { get; set; }
 
-        [JsonProperty("lowPrice")]
+        [JsonPropertyName("lowPrice")]
         public decimal Low { get; set; }
 
-        [JsonProperty("created")]
+        [JsonPropertyName("created")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("changeFromPrevious")]
+        [JsonPropertyName("changeFromPrevious")]
         public decimal Change { get; set; }
     }
 }

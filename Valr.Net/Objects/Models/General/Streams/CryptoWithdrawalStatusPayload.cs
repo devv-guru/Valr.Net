@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class CryptoWithdrawalStatusData
     {
-        [JsonProperty("uniqueId")]
+        [JsonPropertyName("uniqueId")]
         public Guid Id { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
 
-        [JsonProperty("confirmations")]
+        [JsonPropertyName("confirmations")]
         public int Confirmations { get; set; }
     }
 

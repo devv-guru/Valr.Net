@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Pay
 {
     public class ValrPaymentIdResponse
     {
-        [JsonProperty("payId")]
+        [JsonPropertyName("payId")]
         public string PayId { get; set; }
 
     }

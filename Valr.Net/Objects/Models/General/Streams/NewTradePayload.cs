@@ -1,31 +1,31 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class NewTradeData
     {
-        [JsonProperty("price")]
+        [JsonPropertyName("price")]
         public decimal Price { get; set; }
 
-        [JsonProperty("quantity")]
+        [JsonPropertyName("quantity")]
         public decimal Quantity { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string Symbol { get; set; }
 
-        [JsonProperty("tradedAt")]
+        [JsonPropertyName("tradedAt")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("side")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("side")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrOrderSide Side { get; set; }
 
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid OrderId { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public Guid Id { get; set; }
     }
 

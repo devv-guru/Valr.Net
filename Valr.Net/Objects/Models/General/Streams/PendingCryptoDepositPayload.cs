@@ -1,28 +1,28 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class PendingCryptoDepositData
     {
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public CurrencyInfo Currency { get; set; }
 
-        [JsonProperty("receiveAddress")]
+        [JsonPropertyName("receiveAddress")]
         public string ReceiveAddress { get; set; }
 
-        [JsonProperty("transactionHash")]
+        [JsonPropertyName("transactionHash")]
         public string TransactionHash { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyName("createdAt")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("confirmations")]
+        [JsonPropertyName("confirmations")]
         public int Confirmations { get; set; }
 
-        [JsonProperty("confirmed")]
+        [JsonPropertyName("confirmed")]
         public bool Confirmed { get; set; }
     }
 }

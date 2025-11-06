@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
@@ -13,34 +13,34 @@ namespace Valr.Net.Objects.Models.General.ExchangeData
 
     public class ValrOrderBookSymbol
     {
-        [JsonProperty("side")]
+        [JsonPropertyName("side")]
         public string Side { get; set; }
 
-        [JsonProperty("quantity")]
+        [JsonPropertyName("quantity")]
         public decimal Quantity { get; set; }
 
-        [JsonProperty("price")]
+        [JsonPropertyName("price")]
         public decimal Price { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string CurrencyPair { get; set; }
 
         /// <summary>
         /// Only used for aggregated order books to indicate how many orders are aggregated together
         /// </summary>
-        [JsonProperty("orderCount")]
+        [JsonPropertyName("orderCount")]
         public int? OrderCount { get; set; }
 
         /// <summary>
         /// Only used for full order books
         /// </summary>
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public Guid? Id { get; set; }
 
         /// <summary>
         /// Only used for full order books
         /// </summary>
-        [JsonProperty("positionAtPrice")]
+        [JsonPropertyName("positionAtPrice")]
         public int? PositionAtPrice { get; set; }
     }
 }

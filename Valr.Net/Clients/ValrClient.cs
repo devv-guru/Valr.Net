@@ -1,6 +1,6 @@
-﻿using CryptoExchange.Net;
+﻿using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using Valr.Net.Clients.GeneralApi;
 using Valr.Net.Clients.PayApi;
 using Valr.Net.Clients.SpotApi;
@@ -58,18 +58,27 @@ namespace Valr.Net.Clients
         }
 
         /// <inheritdoc />
-        protected override Error ParseErrorResponse(JToken error)
+        protected override Error ParseErrorResponse(JsonElement error)
         {
-            if (!error.HasValues)
+            try
+            {
+                if (error.ValueKind == JsonValueKind.Undefined || error.ValueKind == JsonValueKind.Null)
+                    return new ServerError(error.ToString());
+
+                if (!error.TryGetProperty("message", out var msg) && !error.TryGetProperty("code", out var code))
+                    return new ServerError(error.ToString());
+
+                if (error.TryGetProperty("message", out var message) && !error.TryGetProperty("code", out var _))
+                    return new ServerError(message.GetString() ?? error.ToString());
+
+                var c = error.TryGetProperty("code", out var codeProp) ? codeProp.GetInt32() : 0;
+                var m = error.TryGetProperty("message", out var messageProp) ? messageProp.GetString() ?? string.Empty : string.Empty;
+                return new ServerError(c, m);
+            }
+            catch
+            {
                 return new ServerError(error.ToString());
-
-            if (error["message"] == null && error["code"] == null)
-                return new ServerError(error.ToString());
-
-            if (error["message"] != null && error["code"] == null)
-                return new ServerError((string)error["msg"]!);
-
-            return new ServerError((int)error["code"]!, (string)error["message"]!);
+            }
         }
 
         internal Task<WebCallResult<T>> SendRequestInternal<T>(RestApiClient apiClient, Uri uri, HttpMethod method, CancellationToken cancellationToken,

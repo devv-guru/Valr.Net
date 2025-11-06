@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class ProcessedOrderData
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid Id { get; set; }
 
-        [JsonProperty("success")]
+        [JsonPropertyName("success")]
         public bool Success { get; set; }
 
-        [JsonProperty("failureReason")]
+        [JsonPropertyName("failureReason")]
         public string? Reason { get; set; }
     }
 

@@ -1,39 +1,39 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.Spot.Streams;
 
 public class AggregateOrderBookData
 {
-    [JsonProperty("Asks")]
+    [JsonPropertyName("Asks")]
     public AggregateOrder[] Asks { get; set; }
 
-    [JsonProperty("Bids")]
+    [JsonPropertyName("Bids")]
     public AggregateOrder[] Bids { get; set; }
 
-    [JsonProperty("LastChange")]
+    [JsonPropertyName("LastChange")]
     public DateTime LastChange { get; set; }
 
-    [JsonProperty("SequenceNumber")]
+    [JsonPropertyName("SequenceNumber")]
     public long SequenceNumber { get; set; }
 }
 
 public class AggregateOrder
 {
-    [JsonProperty("side")]
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonPropertyName("side")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ValrOrderSide Side { get; set; }
 
-    [JsonProperty("quantity")]
+    [JsonPropertyName("quantity")]
     public decimal Quantity { get; set; }
 
-    [JsonProperty("price")]
+    [JsonPropertyName("price")]
     public decimal Price { get; set; }
 
-    [JsonProperty("currencyPair")]
+    [JsonPropertyName("currencyPair")]
     public string Symbol { get; set; }
 
-    [JsonProperty("orderCount")]
+    [JsonPropertyName("orderCount")]
     public int OrderCount { get; set; }
 }

@@ -1,13 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32210.238
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11201.2 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Valr.Net", "Valr.Net\Valr.Net.csproj", "{30462123-075C-4C0C-AE47-CFC9BF93934D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Valr.Net.UnitTests", "Valr.Net.UnitTests\Valr.Net.UnitTests.csproj", "{15ABC59B-C73B-4376-8CB5-A554EE598CEE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Valr.Net.IntegrationTests", "Valr.Net.IntegrationTests\Valr.Net.IntegrationTests.csproj", "{76029859-DA26-43E2-9285-8914D780ACDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C6A378C5-B34A-4830-8283-1FCEA847B8E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CC4BCE46-960B-4ED5-A186-A697A54797B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B5CB8079-DE52-43D7-A93E-9E91A012FA93}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ROADMAP.md = docs\ROADMAP.md
+		docs\TASKBOARD.md = docs\TASKBOARD.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{01FF7CCA-6A62-445B-8CD7-5135BC611AC9}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +45,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{30462123-075C-4C0C-AE47-CFC9BF93934D} = {C6A378C5-B34A-4830-8283-1FCEA847B8E5}
+		{15ABC59B-C73B-4376-8CB5-A554EE598CEE} = {CC4BCE46-960B-4ED5-A186-A697A54797B9}
+		{76029859-DA26-43E2-9285-8914D780ACDF} = {CC4BCE46-960B-4ED5-A186-A697A54797B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EE0FA75-B7DC-4150-9AFA-8B56E698A2B6}

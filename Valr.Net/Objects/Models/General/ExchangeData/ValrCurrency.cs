@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
     public class ValrCurrency
     {
-        [JsonProperty("symbol")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("isActive")]
+        [JsonPropertyName("isActive")]
         public bool IsActive { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("longName")]
+        [JsonPropertyName("longName")]
         public string LongName { get; set; }
 
-        [JsonProperty("decimalPlaces")]
+        [JsonPropertyName("decimalPlaces")]
         public int DecimalPlaces { get; set; }
 
-        [JsonProperty("withdrawalDecimalPlaces")]
+        [JsonPropertyName("withdrawalDecimalPlaces")]
         public int WithdrawalDecimalPlaces { get; set; }
     }
 

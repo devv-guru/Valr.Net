@@ -97,5 +97,14 @@ namespace Valr.Net.Objects.Options
             _payApiOptions = new ValrApiClientOptions(baseOn.PayApiOptions, null);
             _generalApiOptions = new ValrApiClientOptions(baseOn.GeneralApiOptions, null);
         }
+
+        /// <summary>
+        /// Create a migration facade to the new ValrRestOptions. This is an incremental helper used while
+        /// porting to CryptoExchange.Net 9.x; the actual inheritance will point to 9.x base types later.
+        /// </summary>
+        public ValrRestOptions ToValrRestOptions()
+        {
+            return new ValrRestOptions(this);
+        }
     }
 }

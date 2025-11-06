@@ -1,31 +1,31 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Wallet
 {
     public class ValrDepositStatusInfo
     {
-        [JsonProperty("currencyCode")]
+        [JsonPropertyName("currencyCode")]
         public string CurrencyCode { get; set; }
 
-        [JsonProperty("receiveAddress")]
+        [JsonPropertyName("receiveAddress")]
         public string ReceiveAddress { get; set; }
 
-        [JsonProperty("transactionHash")]
+        [JsonPropertyName("transactionHash")]
         public string TransactionHash { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyName("createdAt")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonProperty("confirmations")]
+        [JsonPropertyName("confirmations")]
         public int Confirmations { get; set; }
 
-        [JsonProperty("confirmed")]
+        [JsonPropertyName("confirmed")]
         public bool Confirmed { get; set; }
 
-        [JsonProperty("confirmedAt")]
+        [JsonPropertyName("confirmedAt")]
         public DateTime? ConfirmedAt { get; set; }
     }
 }

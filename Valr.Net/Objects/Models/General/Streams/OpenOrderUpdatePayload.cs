@@ -1,101 +1,101 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class OpenOrderData
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid orderId { get; set; }
 
-        [JsonProperty("side")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("side")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrOrderSide Side { get; set; }
 
-        [JsonProperty("remainingQuantity")]
+        [JsonPropertyName("remainingQuantity")]
         public decimal RemainingQuantity { get; set; }
 
-        [JsonProperty("originalPrice")]
+        [JsonPropertyName("originalPrice")]
         public decimal OriginalPrice { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public Currencypair CurrencyPair { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyName("createdAt")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("originalQuantity")]
+        [JsonPropertyName("originalQuantity")]
         public decimal OriginalQuantity { get; set; }
 
-        [JsonProperty("filledPercentage")]
+        [JsonPropertyName("filledPercentage")]
         public decimal FilledPercentage { get; set; }
 
-        [JsonProperty("customerOrderId")]
+        [JsonPropertyName("customerOrderId")]
         public string CustomerOrderId { get; set; }
     }
 
     public class Currencypair
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonProperty("symbol")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("baseCurrency")]
+        [JsonPropertyName("baseCurrency")]
         public CurrencyInfo BaseCurrency { get; set; }
 
-        [JsonProperty("quoteCurrency")]
+        [JsonPropertyName("quoteCurrency")]
         public CurrencyInfo QuoteCurrency { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("exchange")]
+        [JsonPropertyName("exchange")]
         public string Exchange { get; set; }
 
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public bool Active { get; set; }
 
-        [JsonProperty("minBaseAmount")]
+        [JsonPropertyName("minBaseAmount")]
         public decimal MinBaseAmount { get; set; }
 
-        [JsonProperty("maxBaseAmount")]
+        [JsonPropertyName("maxBaseAmount")]
         public decimal MaxBaseAmount { get; set; }
 
-        [JsonProperty("minQuoteAmount")]
+        [JsonPropertyName("minQuoteAmount")]
         public decimal MinQuoteAmount { get; set; }
 
-        [JsonProperty("maxQuoteAmount")]
+        [JsonPropertyName("maxQuoteAmount")]
         public decimal MaxQuoteAmount { get; set; }
 
     }
 
     public class CurrencyInfo
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonProperty("symbol")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("decimalPlaces")]
+        [JsonPropertyName("decimalPlaces")]
         public int DecimalPlaces { get; set; }
 
-        [JsonProperty("isActive")]
+        [JsonPropertyName("isActive")]
         public bool Active { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("longName")]
+        [JsonPropertyName("longName")]
         public string LongName { get; set; }
 
-        [JsonProperty("currencyDecimalPlaces")]
+        [JsonPropertyName("currencyDecimalPlaces")]
         public int CurrencyDecimalPlaces { get; set; }
 
-        [JsonProperty("supportedWithdrawDecimalPlaces")]
+        [JsonPropertyName("supportedWithdrawDecimalPlaces")]
         public int SupportedWithdrawDecimalPlaces { get; set; }
     }
 }

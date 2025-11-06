@@ -1,77 +1,77 @@
-﻿using CryptoExchange.Net.CommonObjects;
+﻿using CryptoExchange.Net.SharedApis.Enums;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Converters
 {
     public static class EnumConverter
     {
-        public static CommonOrderSide ConvertToCommonOrderSde(ValrOrderSide side)
+        public static SharedOrderSide ConvertToSharedOrderSide(ValrOrderSide side)
         {
             if (side == ValrOrderSide.Buy)
-                return CommonOrderSide.Buy;
+                return SharedOrderSide.Buy;
 
-            return CommonOrderSide.Sell;
+            return SharedOrderSide.Sell;
         }
 
-        public static CommonOrderStatus ConvertToCommonOrderSide(ValrOrderStatus status)
+        public static SharedOrderStatus ConvertToSharedOrderStatus(ValrOrderStatus status)
         {
             switch (status)
             {
                 case ValrOrderStatus.New:
                 case ValrOrderStatus.Open:
                 case ValrOrderStatus.PartiallyFilled:
-                case ValrOrderStatus.Active: return CommonOrderStatus.Active;
+                case ValrOrderStatus.Active: return SharedOrderStatus.Open;
                 case ValrOrderStatus.Failed:
-                case ValrOrderStatus.Cancelled: return CommonOrderStatus.Canceled;
-                case ValrOrderStatus.Filled: return CommonOrderStatus.Filled;
-                default: return CommonOrderStatus.Active;
+                case ValrOrderStatus.Cancelled: return SharedOrderStatus.Canceled;
+                case ValrOrderStatus.Filled: return SharedOrderStatus.Filled;
+                default: return SharedOrderStatus.Open;
             }
         }
 
-        public static CommonOrderType ConvertToCommonOrderType(ValrOrderType type)
+        public static SharedOrderType ConvertToSharedOrderType(ValrOrderType type)
         {
             switch (type)
             {
                 case ValrOrderType.LIMIT:
-                case ValrOrderType.LIMIT_POST_ONLY: return CommonOrderType.Limit;
+                case ValrOrderType.LIMIT_POST_ONLY: return SharedOrderType.Limit;
                 case ValrOrderType.SIMPLE:
-                case ValrOrderType.MARKET: return CommonOrderType.Market;
-                default: return CommonOrderType.Other;
+                case ValrOrderType.MARKET: return SharedOrderType.Market;
+                default: return SharedOrderType.Other;
             }
         }
 
-        public static ValrOrderSide ConvertFromCommonOrderSde(CommonOrderSide side)
+        public static ValrOrderSide ConvertFromSharedOrderSide(SharedOrderSide side)
         {
-            if (side == CommonOrderSide.Buy)
+            if (side == SharedOrderSide.Buy)
                 return ValrOrderSide.Buy;
 
             return ValrOrderSide.Sell;
         }
 
-        public static CommonOrderStatus ConvertFromCommonOrderSide(ValrOrderStatus status)
+        public static SharedOrderStatus ConvertFromSharedOrderStatus(ValrOrderStatus status)
         {
             switch (status)
             {
                 case ValrOrderStatus.New:
                 case ValrOrderStatus.Open:
                 case ValrOrderStatus.PartiallyFilled:
-                case ValrOrderStatus.Active: return CommonOrderStatus.Active;
+                case ValrOrderStatus.Active: return SharedOrderStatus.Open;
                 case ValrOrderStatus.Failed:
-                case ValrOrderStatus.Cancelled: return CommonOrderStatus.Canceled;
-                case ValrOrderStatus.Filled: return CommonOrderStatus.Filled;
-                default: return CommonOrderStatus.Active;
+                case ValrOrderStatus.Cancelled: return SharedOrderStatus.Canceled;
+                case ValrOrderStatus.Filled: return SharedOrderStatus.Filled;
+                default: return SharedOrderStatus.Open;
             }
         }
 
-        public static CommonOrderType ConvertFromCommonOrderType(ValrOrderType type)
+        public static SharedOrderType ConvertFromSharedOrderType(ValrOrderType type)
         {
             switch (type)
             {
                 case ValrOrderType.LIMIT:
-                case ValrOrderType.LIMIT_POST_ONLY: return CommonOrderType.Limit;
+                case ValrOrderType.LIMIT_POST_ONLY: return SharedOrderType.Limit;
                 case ValrOrderType.SIMPLE:
-                case ValrOrderType.MARKET: return CommonOrderType.Market;
-                default: return CommonOrderType.Other;
+                case ValrOrderType.MARKET: return SharedOrderType.Market;
+                default: return SharedOrderType.Other;
             }
         }
     }

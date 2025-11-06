@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-
-
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>net6.0;net8.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<PackageId>Valr.Net</PackageId>
@@ -14,8 +12,8 @@
 		<PackageProjectUrl>https://github.com/Deon-v/Valr.Net</PackageProjectUrl>
 		<PackageReleaseNotes>Complete syncronized orderbook implementation</PackageReleaseNotes>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<Title>Valr.Net</Title>
-		<RepositoryType>Git</RepositoryType>
+        <Title>Valr.Net</Title>
+        <RepositoryType>Git</RepositoryType>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -32,16 +30,16 @@
 
 	<ItemGroup>
 		<None Include="LICENSE" Pack="true" PackagePath="" />
-	</ItemGroup> 
-	
+	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Icon\" />
+		<Folder Include="Shims\" />
 		<Folder Include="SymbolOrderBooks\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CryptoExchange.Net" Version="5.1.8" />
+		<PackageReference Include="CryptoExchange.Net" Version="9.12.0" />
 	</ItemGroup>
 
 </Project>

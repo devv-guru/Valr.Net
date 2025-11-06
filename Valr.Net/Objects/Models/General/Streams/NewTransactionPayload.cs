@@ -1,77 +1,77 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class NewTransactionData
     {
-        [JsonProperty("transactionType")]
+        [JsonPropertyName("transactionType")]
         public Transactiontype TransactionType { get; set; }
 
-        [JsonProperty("debitCurrency")]
+        [JsonPropertyName("debitCurrency")]
         public CurrencyData DebitCurrency { get; set; }
 
-        [JsonProperty("debitValue")]
+        [JsonPropertyName("debitValue")]
         public decimal DebitValue { get; set; }
 
-        [JsonProperty("creditCurrency")]
+        [JsonPropertyName("creditCurrency")]
         public CurrencyData CreditCurrency { get; set; }
 
-        [JsonProperty("creditValue")]
+        [JsonPropertyName("creditValue")]
         public decimal CreditValue { get; set; }
 
-        [JsonProperty("feeCurrency")]
+        [JsonPropertyName("feeCurrency")]
         public CurrencyData FeeInfo { get; set; }
 
-        [JsonProperty("feeValue")]
+        [JsonPropertyName("feeValue")]
         public decimal FeeValue { get; set; }
 
-        [JsonProperty("eventAt")]
+        [JsonPropertyName("eventAt")]
         public DateTime TransactionDate { get; set; }
 
-        [JsonProperty("additionalInfo")]
+        [JsonPropertyName("additionalInfo")]
         public Additionalinfo AdditionalInfo { get; set; }
 
     }
 
     public class Transactiontype
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
     }
 
     public class CurrencyData
     {
-        [JsonProperty("symbol")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("decimalPlaces")]
+        [JsonPropertyName("decimalPlaces")]
         public int DecimalPlaces { get; set; }
 
-        [JsonProperty("isActive")]
+        [JsonPropertyName("isActive")]
         public bool IsActive { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("longName")]
+        [JsonPropertyName("longName")]
         public string LongName { get; set; }
 
-        [JsonProperty("supportedWithdrawDecimalPlaces")]
+        [JsonPropertyName("supportedWithdrawDecimalPlaces")]
         public int SupportedWithdrawDecimalPlaces { get; set; }
     }
 
     public class Additionalinfo
     {
-        [JsonProperty("costPerCoin")]
+        [JsonPropertyName("costPerCoin")]
         public int CostPerCoin { get; set; }
 
-        [JsonProperty("costPerCoinSymbol")]
+        [JsonPropertyName("costPerCoinSymbol")]
         public string CostPerCoinSymbol { get; set; }
 
-        [JsonProperty("currencyPairSymbol")]
+        [JsonPropertyName("currencyPairSymbol")]
         public string CurrencyPairSymbol { get; set; }
     }
 }

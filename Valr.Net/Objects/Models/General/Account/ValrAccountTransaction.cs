@@ -1,32 +1,32 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.Account
 {
     public class ValrAccountTransaction
     {
-        [JsonProperty("transactionType")]
+        [JsonPropertyName("transactionType")]
         public Transactiontype TransactionType { get; set; }
 
-        [JsonProperty("debitCurrency")]
+        [JsonPropertyName("debitCurrency")]
         public string DebitCurrency { get; set; }
 
-        [JsonProperty("debitValue")]
+        [JsonPropertyName("debitValue")]
         public string DebitValue { get; set; }
 
-        [JsonProperty("feeCurrency")]
+        [JsonPropertyName("feeCurrency")]
         public string FeeCurrency { get; set; }
 
-        [JsonProperty("feeValue")]
+        [JsonPropertyName("feeValue")]
         public decimal Fee { get; set; }
 
-        [JsonProperty("eventAt")]
+        [JsonPropertyName("eventAt")]
         public DateTime TransactionTime { get; set; }
 
-        [JsonProperty("additionalInfo")]
+        [JsonPropertyName("additionalInfo")]
         public Additionalinfo AdditionalInfo { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public string Id { get; set; }
     }
 
@@ -38,19 +38,19 @@ namespace Valr.Net.Objects.Models.General.Account
 
     public class Transactiontype
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ValrTransactionType Type { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
     }
 
     public class Additionalinfo
     {
-        [JsonProperty("bankName")]
+        [JsonPropertyName("bankName")]
         public string BankName { get; set; }
 
-        [JsonProperty("accountNumber")]
+        [JsonPropertyName("accountNumber")]
         public string AccountNumber { get; set; }
     }
 

@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models
 {
     public class InboundStreamPayload<T>
     {
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public ValrSocketInboundEvent PayloadType { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public T Data { get; set; }
 
-        [JsonProperty("currencyPairSymbol")]
+        [JsonPropertyName("currencyPairSymbol")]
         public string? Symbol { get; set; }
     }
 }

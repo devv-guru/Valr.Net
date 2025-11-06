@@ -1,40 +1,40 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.Spot.Trading
 {
     public class ValrOrderResponseBase
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid Id { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string CurrencyPair { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("orderStatusType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("orderStatusType")]
         public ValrOrderStatus Status { get; set; }
 
-        [JsonProperty("orderSide")]
+        [JsonPropertyName("orderSide")]
         public ValrOrderSide Side { get; set; }
 
-        [JsonProperty("originalPrice")]
+        [JsonPropertyName("originalPrice")]
         public decimal OriginalPrice { get; set; }
 
-        [JsonProperty("remainingQuantity")]
+        [JsonPropertyName("remainingQuantity")]
         public decimal RemainingQuantity { get; set; }
 
-        [JsonProperty("originalQuantity")]
+        [JsonPropertyName("originalQuantity")]
         public decimal OriginalQuantity { get; set; }
 
-        [JsonProperty("orderType")]
+        [JsonPropertyName("orderType")]
         public ValrOrderType Type { get; set; }
 
-        [JsonProperty("orderUpdatedAt")]
+        [JsonPropertyName("orderUpdatedAt")]
         public DateTime LastUpdated { get; set; }
 
-        [JsonProperty("orderCreatedAt")]
+        [JsonPropertyName("orderCreatedAt")]
         public DateTime Created { get; set; }
 
         public decimal QuantityFilled => OriginalQuantity - RemainingQuantity;

@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Wallet
 {
     public class ValrWireTransferResponse
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public Guid TransactionId { get; set; }
 
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; set; }
 
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyName("createdAt")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("wireBankAccountId")]
+        [JsonPropertyName("wireBankAccountId")]
         public Guid WireBankAccountId { get; set; }
     }
 }

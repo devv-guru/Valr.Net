@@ -1,76 +1,76 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Wallet
 {
     public class ValrWireAccountInfo
     {
-        [JsonProperty("")]
+        [JsonPropertyName("")]
         public Guid id { get; set; }
 
-        [JsonProperty("accountNumber")]
+        [JsonPropertyName("accountNumber")]
         public string AccountNumber { get; set; }
 
-        [JsonProperty("routingNumber")]
+        [JsonPropertyName("routingNumber")]
         public string RoutingNumber { get; set; }
 
-        [JsonProperty("billingDetails")]
+        [JsonPropertyName("billingDetails")]
         public Billingdetails BillingDetails { get; set; }
 
-        [JsonProperty("bankAddress")]
+        [JsonPropertyName("bankAddress")]
         public Bankaddress BankAddress { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public string Status { get; set; }
 
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
-        [JsonProperty("createdAt")]
+        [JsonPropertyName("createdAt")]
         public DateTime Created { get; set; }
     }
 
     public class Billingdetails
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonProperty("city")]
+        [JsonPropertyName("city")]
         public string? City { get; set; }
 
-        [JsonProperty("country")]
+        [JsonPropertyName("country")]
         public string? Country { get; set; }
 
-        [JsonProperty("line1")]
+        [JsonPropertyName("line1")]
         public string? Line1 { get; set; }
 
-        [JsonProperty("line2")]
+        [JsonPropertyName("line2")]
         public string? Line2 { get; set; }
 
-        [JsonProperty("district")]
+        [JsonPropertyName("district")]
         public string? District { get; set; }
 
-        [JsonProperty("postalCode")]
+        [JsonPropertyName("postalCode")]
         public string? PostalCode { get; set; }
     }
 
     public class Bankaddress
     {
-        [JsonProperty("bankName")]
+        [JsonPropertyName("bankName")]
         public string BankName { get; set; }
 
-        [JsonProperty("city")]
+        [JsonPropertyName("city")]
         public string? City { get; set; }
 
-        [JsonProperty("country")]
+        [JsonPropertyName("country")]
         public string? Country { get; set; }
 
-        [JsonProperty("line1")]
+        [JsonPropertyName("line1")]
         public string? Line1 { get; set; }
 
-        [JsonProperty("line2")]
+        [JsonPropertyName("line2")]
         public string? Line2 { get; set; }
 
-        [JsonProperty("district")]
+        [JsonPropertyName("district")]
         public string? District { get; set; }
     }
 

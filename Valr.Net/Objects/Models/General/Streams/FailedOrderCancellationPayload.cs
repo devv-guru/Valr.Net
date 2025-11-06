@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class FailedOrderCancellationData
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid OrderId { get; set; }
 
-        [JsonProperty("message")]
+        [JsonPropertyName("message")]
         public string Message { get; set; }
     }
 

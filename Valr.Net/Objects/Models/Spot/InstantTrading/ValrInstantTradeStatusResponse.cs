@@ -1,37 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Spot.InstantTrading
 {
     public class ValrInstantTradeStatusResponse
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid Id { get; set; }
 
-        [JsonProperty("success")]
+        [JsonPropertyName("success")]
         public bool Success { get; set; }
 
-        [JsonProperty("processing")]
+        [JsonPropertyName("processing")]
         public decimal Processing { get; set; }
 
-        [JsonProperty("paidAmount")]
+        [JsonPropertyName("paidAmount")]
         public decimal PaidAmount { get; set; }
 
-        [JsonProperty("paidCurrency")]
+        [JsonPropertyName("paidCurrency")]
         public string PaidCurrency { get; set; }
 
-        [JsonProperty("receivedAmount")]
+        [JsonPropertyName("receivedAmount")]
         public decimal ReceivedAmount { get; set; }
 
-        [JsonProperty("receivedCurrency")]
+        [JsonPropertyName("receivedCurrency")]
         public string ReceivedCurrency { get; set; }
 
-        [JsonProperty("feeAmount")]
+        [JsonPropertyName("feeAmount")]
         public decimal FeeAmount { get; set; }
 
-        [JsonProperty("feeCurrency")]
+        [JsonPropertyName("feeCurrency")]
         public string FeeCurrency { get; set; }
 
-        [JsonProperty("orderExecutedAt")]
+        [JsonPropertyName("orderExecutedAt")]
         public DateTime TimeExecuted { get; set; }
     }
 }

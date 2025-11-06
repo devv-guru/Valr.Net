@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Spot.Trading
 {
     public class ValrOrderStatusResponse : ValrOrderResponseBase
     {
-        [JsonProperty("failedReason")]
+        [JsonPropertyName("failedReason")]
         public string FailedReason { get; set; }
 
-        [JsonProperty("customerOrderId")]
+        [JsonPropertyName("customerOrderId")]
         public int CustomerOrderId { get; set; }
     }
 }

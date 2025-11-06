@@ -1,36 +1,36 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Spot.Streams;
 
 public class FullOrderBookData
 {
-    [JsonProperty("LastChange")]
+    [JsonPropertyName("LastChange")]
     public long LastChange { get; set; }
 
-    [JsonProperty("Asks")]
+    [JsonPropertyName("Asks")]
     public Order[] Asks { get; set; }
 
-    [JsonProperty("Bids")]
+    [JsonPropertyName("Bids")]
     public Order[] Bids { get; set; }
 
-    [JsonProperty("SequenceNumber")]
+    [JsonPropertyName("SequenceNumber")]
     public int SequenceNumber { get; set; }
 }
 
 public class Order
 {
-    [JsonProperty("Price")]
+    [JsonPropertyName("Price")]
     public decimal Price { get; set; }
 
-    [JsonProperty("Orders")]
+    [JsonPropertyName("Orders")]
     public OrderDetails[] Orders { get; set; }
 }
 
 public class OrderDetails
 {
-    [JsonProperty("orderId")]
+    [JsonPropertyName("orderId")]
     public Guid Id { get; set; }
 
-    [JsonProperty("quantity")]
+    [JsonPropertyName("quantity")]
     public decimal Quantity { get; set; }
 }

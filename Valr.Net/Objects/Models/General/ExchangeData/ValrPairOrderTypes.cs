@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
     public class ValrPairOrderTypes
     {
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string CurrencyPair { get; set; }
 
-        [JsonProperty("orderTypes")]
+        [JsonPropertyName("orderTypes")]
         public ValrOrderType[] OrderTypes { get; set; }
     }
 

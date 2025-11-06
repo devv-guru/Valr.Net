@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Pay
 {
     public class ValrPaymentResponse
     {
-        [JsonProperty("identifier")]
+        [JsonPropertyName("identifier")]
         public Guid Id { get; set; }
 
-        [JsonProperty("transactionId")]
+        [JsonPropertyName("transactionId")]
         public string TransactionId { get; set; }
     }
 }

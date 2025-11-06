@@ -1,7 +1,7 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Objects;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -80,7 +80,13 @@ namespace Valr.Net
 
             if (body?.Count != 0)
             {
-                b = JsonConvert.SerializeObject(body);
+                // Use System.Text.Json for serialization. Use options to allow numbers and strings; complex objects should be converted to primitives before calling.
+                b = JsonSerializer.Serialize(body, new JsonSerializerOptions
+                {
+                    // Preserve property naming as-is to match previous behavior
+                    PropertyNameCaseInsensitive = true,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+                });
             }
 
             var payload = timestamp + verb.ToUpper() + path + b + subAccountId;

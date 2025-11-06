@@ -1,29 +1,29 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
     public class ValrTrade
     {
-        [JsonProperty("price")]
+        [JsonPropertyName("price")]
         public decimal Price { get; set; }
 
-        [JsonProperty("quantity")]
+        [JsonPropertyName("quantity")]
         public decimal Quantity { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string CurrencyPair { get; set; }
 
-        [JsonProperty("tradedAt")]
+        [JsonPropertyName("tradedAt")]
         public DateTime TradeTime { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("side")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("side")]
         public ValrOrderSide Side { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        [JsonProperty("takerSide")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonPropertyName("takerSide")]
         private ValrOrderSide TakerSide
         {
             set
@@ -32,16 +32,16 @@ namespace Valr.Net.Objects.Models.General.ExchangeData
             }
         }
 
-        [JsonProperty("sequenceId")]
+        [JsonPropertyName("sequenceId")]
         public int SequenceId { get; set; }
 
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public Guid Id { get; set; }
 
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid OrderId { get; set; }
 
-        [JsonProperty("quoteVolume")]
+        [JsonPropertyName("quoteVolume")]
         public decimal? QuoteVolume { get; set; }
     }
 

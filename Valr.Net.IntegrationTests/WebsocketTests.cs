@@ -130,6 +130,8 @@ namespace Valr.Net.IntegrationTests
                 });
             var result = await _subscription.StartAsync();
 
+            await Task.Delay(TimeSpan.FromSeconds(10));
+
             Assert.IsTrue(result.Success);
         }
 

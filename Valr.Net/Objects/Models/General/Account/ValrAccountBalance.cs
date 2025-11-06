@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Account
 {
     public class ValrAccountBalance
     {
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; set; }
-        [JsonProperty("available")]
+        [JsonPropertyName("available")]
         public decimal Available { get; set; }
-        [JsonProperty("reserved")]
+        [JsonPropertyName("reserved")]
         public decimal Reserved { get; set; }
-        [JsonProperty("total")]
+        [JsonPropertyName("total")]
         public decimal Total { get; set; }
 
-        [JsonProperty("updatedAt")]
+        [JsonPropertyName("updatedAt")]
         public DateTime UpdatedAt { get; set; }
     }
 

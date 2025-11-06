@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.Wallet
 {
     public class ValrWithdrawalInfo
     {
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; set; }
 
-        [JsonProperty("minimumWithdrawAmount")]
+        [JsonPropertyName("minimumWithdrawAmount")]
         public decimal MinimumWithdrawAmount { get; set; }
 
-        [JsonProperty("withdrawalDecimalPlaces")]
+        [JsonPropertyName("withdrawalDecimalPlaces")]
         public int WithdrawalDecimalPlaces { get; set; }
 
-        [JsonProperty("isActive")]
+        [JsonPropertyName("isActive")]
         public bool IsActive { get; set; }
 
-        [JsonProperty("withdrawCost")]
+        [JsonPropertyName("withdrawCost")]
         public decimal WithdrawCost { get; set; }
 
-        [JsonProperty("supportsPaymentReference")]
+        [JsonPropertyName("supportsPaymentReference")]
         public bool SupportsPaymentReference { get; set; }
     }
 }

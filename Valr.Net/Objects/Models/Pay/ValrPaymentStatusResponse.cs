@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.Pay
 {
     public class ValrPaymentStatusResponse
     {
-        [JsonProperty("amount")]
+        [JsonPropertyName("amount")]
         public decimal Amount { get; set; }
 
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
 
-        [JsonProperty("transactionId")]
+        [JsonPropertyName("transactionId")]
         public string TransactionId { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public ValrPaymentStatus Status { get; set; }
 
-        [JsonProperty("direction")]
+        [JsonPropertyName("direction")]
         public string Direction { get; set; }
     }
 }

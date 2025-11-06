@@ -3,8 +3,7 @@ using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.WebSockets;
 using Valr.Net.Clients.GeneralApi;
@@ -58,7 +57,7 @@ namespace Valr.Net.Clients
             ValrSocketClientOptions.Default = options;
         }
 
-        internal CallResult<T> DeserializeInternal<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null)
+        internal CallResult<T> DeserializeInternal<T>(JsonElement obj, JsonSerializer? serializer = null, int? requestId = null)
             => Deserialize<T>(obj, serializer, requestId);
 
         internal Task<CallResult<UpdateSubscription>> SubscribeInternal<T>(SocketApiClient apiClient, string url, ValrSocketOutboundEvent _event, string[] pair, Action<DataEvent<T>> onData, CancellationToken ct, bool authenticated = false)
@@ -90,49 +89,48 @@ namespace Valr.Net.Clients
         }
 
         /// <inheritdoc />
-        protected override bool HandleQueryResponse<T>(SocketConnection socketConnection, object request, JToken data, [NotNullWhen(true)] out CallResult<T>? callResult)
+        protected override bool HandleQueryResponse<T>(SocketConnection socketConnection, object request, JsonElement data, [NotNullWhen(true)] out CallResult<T>? callResult)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        protected override bool HandleSubscriptionResponse(SocketConnection s, SocketSubscription subscription, object request, JToken message, out CallResult<object>? callResult)
+        protected override bool HandleSubscriptionResponse(SocketConnection s, SocketSubscription subscription, object request, JsonElement message, out CallResult<object>? callResult)
         {
             callResult = null;
-            if (message.Type != JTokenType.Object)
+            if (message.ValueKind != JsonValueKind.Object)
                 return false;
 
-            var type = message["type"];
-            if (type == null)
+            if (!message.TryGetProperty("type", out var type))
                 return false;
 
-            var result = message["message"];
-            if (result != null && result.Type != JTokenType.Null)
+            if (message.TryGetProperty("message", out var result) && result.ValueKind != JsonValueKind.Null)
             {
                 log.Write(LogLevel.Trace, $"Socket {s.SocketId} Subscription completed");
                 callResult = new CallResult<object>(new object());
                 return true;
             }
 
-            var error = message["error"];
-            if (error == null)
+            if (!message.TryGetProperty("error", out var error))
             {
                 callResult = new CallResult<object>(new ServerError("Unknown error: " + message));
                 return true;
             }
 
-            callResult = new CallResult<object>(new ServerError(error["code"]!.Value<int>(), error["msg"]!.ToString()));
+            var code = error.GetProperty("code").GetInt32();
+            var msg = error.GetProperty("msg").GetString();
+            callResult = new CallResult<object>(new ServerError(code, msg!));
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JToken message, object request)
+        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JsonElement message, object request)
         {
-            if (message.Type != JTokenType.Object)
+            if (message.ValueKind != JsonValueKind.Object)
                 return false;
 
             var parsedRequest = (ValrSocketRequest)request;
-            var stream = message["type"].Value<string>();
+            var stream = message.GetProperty("type").GetString();
 
             bool parsed = Enum.TryParse(stream, false, out ValrSocketInboundEvent inboundEvent);
             ValrSocketOutboundEvent outboundEvent = parsedRequest.Subscriptions[0].Event;
@@ -185,7 +183,7 @@ namespace Valr.Net.Clients
         }
 
         /// <inheritdoc />
-        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JToken message, string identifier)
+        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JsonElement message, string identifier)
         {
             return true;
         }
@@ -285,17 +283,16 @@ namespace Valr.Net.Clients
 
             await connection.SendAndWaitAsync(unsub, ClientOptions.SocketResponseTimeout, data =>
             {
-                if (data.Type != JTokenType.Object)
+                if (data.ValueKind != JsonValueKind.Object)
                     return false;
 
-                var id = data["id"];
-                if (id == null)
+                if (!data.TryGetProperty("id", out var id))
                     return false;
 
-                var result = data["result"];
-                if (result?.Type == JTokenType.Null)
+                var result = data.GetProperty("result");
+                if (result.ValueKind == JsonValueKind.Null)
                 {
-                    result = true;
+                    result = JsonValueKind.True;
                     return true;
                 }
 

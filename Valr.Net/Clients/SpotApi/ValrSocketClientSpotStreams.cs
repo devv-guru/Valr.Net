@@ -3,7 +3,7 @@ using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.SpotApi;
 using Valr.Net.Objects.Models;
@@ -43,31 +43,32 @@ namespace Valr.Net.Clients.SpotApi
         {
             var handler = new Action<DataEvent<string>>(data =>
             {
-                var combinedToken = JToken.Parse(data.Data);
+                using var doc = JsonDocument.Parse(data.Data);
+                var combinedElement = doc.RootElement;
 
-                var eventType = combinedToken["type"]?.ToObject<string>();
+                var eventType = combinedElement.TryGetProperty("type", out var typeProperty) ? typeProperty.GetString() : null;
                 if (!Enum.TryParse(eventType, false, out ValrSocketInboundEvent parsedEventType))
                     return;
 
-                RouteFullOrderBookEvent(snapShotHandler, updateHandler, parsedEventType, data, combinedToken);
+                RouteFullOrderBookEvent(snapShotHandler, updateHandler, parsedEventType, data, data.Data);
             });
 
             return await Subscribe(ValrSocketOutboundEvent.FULL_ORDERBOOK_UPDATE, symbol, handler, ct).ConfigureAwait(false);
         }
 
         private void RouteFullOrderBookEvent(Action<DataEvent<InboundStreamPayload<FullOrderBookData>>> snapShotHandler, Action<DataEvent<InboundStreamPayload<FullOrderBookData>>> updateHandler,
-            ValrSocketInboundEvent parsedEventType, DataEvent<string> data, JToken combinedToken)
+            ValrSocketInboundEvent parsedEventType, DataEvent<string> data, string jsonData)
         {
             switch (parsedEventType)
             {
                 case ValrSocketInboundEvent.FULL_ORDERBOOK_SNAPSHOT:
                     {
-                        InvokeHandler(data, combinedToken, snapShotHandler);
+                        InvokeHandler(data, jsonData, snapShotHandler);
                         break;
                     }
                 case ValrSocketInboundEvent.FULL_ORDERBOOK_UPDATE:
                     {
-                        InvokeHandler(data, combinedToken, updateHandler);
+                        InvokeHandler(data, jsonData, updateHandler);
                         break;
                     }
             }
@@ -98,9 +99,9 @@ namespace Valr.Net.Clients.SpotApi
         protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new ValrAuthenticationProvider(credentials);
 
-        private void InvokeHandler<T>(DataEvent<string> data, JToken combinedToken, Action<DataEvent<T>> handler)
+        private void InvokeHandler<T>(DataEvent<string> data, string jsonData, Action<DataEvent<T>> handler)
         {
-            var result = _baseClient.DeserializeInternal<T>(combinedToken);
+            var result = _baseClient.DeserializeInternal<T>(jsonData);
             handler.Invoke(data.As(result.Data));
         }
 

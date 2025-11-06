@@ -1,26 +1,26 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     internal class ValrSocketRequest
     {
-        [JsonProperty("type")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("type")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrSocketEventType EventType { get; set; }
 
-        [JsonProperty("subscriptions")]
+        [JsonPropertyName("subscriptions")]
         public Subscription[] Subscriptions { get; set; }
     }
 
     public class Subscription
     {
-        [JsonProperty("event")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("event")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrSocketOutboundEvent Event { get; set; }
 
-        [JsonProperty("pairs")]
+        [JsonPropertyName("pairs")]
         public string[] pairs { get; set; }
     }
 }

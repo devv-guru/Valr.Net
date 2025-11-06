@@ -1,31 +1,31 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Spot.Streams;
 
 public class NewTradeBucketData
 {
-    [JsonProperty("currencyPairSymbol")]
+    [JsonPropertyName("currencyPairSymbol")]
     public string Symbol { get; set; }
 
-    [JsonProperty("bucketPeriodInSeconds")]
+    [JsonPropertyName("bucketPeriodInSeconds")]
     public int BucketPeriod { get; set; }
 
-    [JsonProperty("startTime")]
+    [JsonPropertyName("startTime")]
     public DateTime StartTime { get; set; }
 
-    [JsonProperty("open")]
+    [JsonPropertyName("open")]
     public decimal Open { get; set; }
 
-    [JsonProperty("high")]
+    [JsonPropertyName("high")]
     public decimal High { get; set; }
 
-    [JsonProperty("low")]
+    [JsonPropertyName("low")]
     public decimal Low { get; set; }
 
-    [JsonProperty("close")]
+    [JsonPropertyName("close")]
     public decimal Close { get; set; }
 
-    [JsonProperty("volume")]
+    [JsonPropertyName("volume")]
     public decimal Volume { get; set; }
 
 }

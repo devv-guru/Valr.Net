@@ -1,23 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.Spot.Trading
 {
     public class ValrOrderDetailResponse : ValrOrderResponseBase
     {
-        [JsonProperty("failedReason")]
+        [JsonPropertyName("failedReason")]
         public string FailedReason { get; set; }
 
-        [JsonProperty("executedFee")]
+        [JsonPropertyName("executedFee")]
         public decimal ExecutedFee { get; set; }
 
-        [JsonProperty("executedPrice")]
+        [JsonPropertyName("executedPrice")]
         public decimal ExecutedPrice { get; set; }
 
-        [JsonProperty("executedQuantity")]
+        [JsonPropertyName("executedQuantity")]
         public decimal ExecutedQuantity { get; set; }
 
-        [JsonProperty("timeInForce")]
+        [JsonPropertyName("timeInForce")]
         public ValrTimeInforce TimeInForce { get; set; }
     }
 }

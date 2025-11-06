@@ -1,40 +1,40 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
     public class ValrSymbol
     {
-        [JsonProperty("symbol")]
+        [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
-        [JsonProperty("baseCurrency")]
+        [JsonPropertyName("baseCurrency")]
         public string BaseCurrency { get; set; }
 
-        [JsonProperty("quoteCurrency")]
+        [JsonPropertyName("quoteCurrency")]
         public string QuoteCurrency { get; set; }
 
-        [JsonProperty("shortName")]
+        [JsonPropertyName("shortName")]
         public string ShortName { get; set; }
 
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public bool Active { get; set; }
 
-        [JsonProperty("minBaseAmount")]
+        [JsonPropertyName("minBaseAmount")]
         public decimal MinBaseAmount { get; set; }
 
-        [JsonProperty("maxBaseAmount")]
+        [JsonPropertyName("maxBaseAmount")]
         public decimal MaxBaseAmount { get; set; }
 
-        [JsonProperty("minQuoteAmount")]
+        [JsonPropertyName("minQuoteAmount")]
         public decimal MinQuoteAmount { get; set; }
 
-        [JsonProperty("maxQuoteAmount")]
+        [JsonPropertyName("maxQuoteAmount")]
         public decimal MaxQuoteAmount { get; set; }
 
-        [JsonProperty("tickSize")]
+        [JsonPropertyName("tickSize")]
         public decimal TickSize { get; set; }
 
-        [JsonProperty("baseDecimalPlaces")]
+        [JsonPropertyName("baseDecimalPlaces")]
         public int BaseDecimalPlaces { get; set; }
     }
 }

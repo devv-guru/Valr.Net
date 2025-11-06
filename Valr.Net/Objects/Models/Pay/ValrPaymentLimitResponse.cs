@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.Pay
 {
     public class ValrPaymentLimitResponse
     {
-        [JsonProperty("maxPaymentAmount")]
+        [JsonPropertyName("maxPaymentAmount")]
         public decimal MaxPaymentAmount { get; set; }
 
-        [JsonProperty("minPaymentAmount")]
+        [JsonPropertyName("minPaymentAmount")]
         public decimal MinPaymentAmount { get; set; }
 
-        [JsonProperty("paymentCurrency")]
+        [JsonPropertyName("paymentCurrency")]
         public string PaymentCurrency { get; set; }
 
-        [JsonProperty("limitType")]
+        [JsonPropertyName("limitType")]
         public string LimitType { get; set; }
     }
 }

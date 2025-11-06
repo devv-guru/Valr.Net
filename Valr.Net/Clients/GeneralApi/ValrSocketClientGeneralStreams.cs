@@ -3,7 +3,7 @@ using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.GeneralApi;
 using Valr.Net.Objects.Models;
@@ -50,9 +50,16 @@ namespace Valr.Net.Clients.GeneralApi
         {
             var handler = new Action<DataEvent<string>>(data =>
             {
-                var combinedToken = JToken.Parse(data.Data);
+                using var doc = JsonDocument.Parse(data.Data);
+                var combinedToken = doc.RootElement;
 
-                var eventType = combinedToken["type"]?.ToObject<string>();
+                string? eventType = null;
+                if (combinedToken.TryGetProperty("type", out var typeElem) && typeElem.ValueKind == JsonValueKind.String)
+                    eventType = typeElem.GetString();
+
+                if (eventType == null)
+                    return;
+
                 if (Enum.TryParse(eventType, false, out ValrSocketInboundEvent parsedEventType))
                     return;
 
@@ -73,7 +80,7 @@ namespace Valr.Net.Clients.GeneralApi
             Action<DataEvent<InboundStreamPayload<FailedOrderCancellationData>>> failedOrderCancellationHandler,
             Action<DataEvent<InboundStreamPayload<PendingCryptoDepositData>>> pendingCryptoDepositHandler,
             Action<DataEvent<InboundStreamPayload<CryptoWithdrawalStatusData>>> cryptoWithdrawalStatusHandler,
-            ValrSocketInboundEvent parsedEventType, DataEvent<string> data, JToken combinedToken)
+            ValrSocketInboundEvent parsedEventType, DataEvent<string> data, JsonElement combinedToken)
         {
             switch (parsedEventType)
             {
@@ -159,10 +166,19 @@ namespace Valr.Net.Clients.GeneralApi
         protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new ValrAuthenticationProvider(credentials);
 
-        private void InvokeHandler<T>(DataEvent<string> data, JToken combinedToken, Action<DataEvent<T>> handler)
+        private void InvokeHandler<T>(DataEvent<string> data, JsonElement combinedToken, Action<DataEvent<T>> handler)
         {
-            var result = _baseClient.DeserializeInternal<T>(combinedToken);
-            handler.Invoke(data.As(result.Data));
+            try
+            {
+                var json = combinedToken.GetRawText();
+                var t = JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var eventData = new DataEvent<T> { Data = t! };
+                handler.Invoke(eventData);
+            }
+            catch
+            {
+                // swallow deserialize errors for now
+            }
         }
     }
 }

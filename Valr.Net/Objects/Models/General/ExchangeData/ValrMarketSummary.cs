@@ -1,37 +1,37 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Valr.Net.Objects.Models.General.ExchangeData
 {
     public class ValrMarketSummary
     {
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public string CurrencyPair { get; set; }
 
-        [JsonProperty("askPrice")]
+        [JsonPropertyName("askPrice")]
         public decimal AskPrice { get; set; }
 
-        [JsonProperty("bidPrice")]
+        [JsonPropertyName("bidPrice")]
         public decimal BidPrice { get; set; }
 
-        [JsonProperty("lastTradedPrice")]
+        [JsonPropertyName("lastTradedPrice")]
         public decimal LastTradedPrice { get; set; }
 
-        [JsonProperty("previousClosePrice")]
+        [JsonPropertyName("previousClosePrice")]
         public decimal PreviousClosePrice { get; set; }
 
-        [JsonProperty("baseVolume")]
+        [JsonPropertyName("baseVolume")]
         public decimal BaseVolume { get; set; }
 
-        [JsonProperty("highPrice")]
+        [JsonPropertyName("highPrice")]
         public decimal HighPrice { get; set; }
 
-        [JsonProperty("lowPrice")]
+        [JsonPropertyName("lowPrice")]
         public decimal LowPrice { get; set; }
 
-        [JsonProperty("created")]
+        [JsonPropertyName("created")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("changeFromPrevious")]
+        [JsonPropertyName("changeFromPrevious")]
         public decimal ChangeFromPrevious { get; set; }
     }
 

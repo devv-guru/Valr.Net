@@ -1,47 +1,47 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using System.Text.Json.Serialization;
+
 using Valr.Net.Enums;
 
 namespace Valr.Net.Objects.Models.General.Streams
 {
     public class OrderUpdateData
     {
-        [JsonProperty("orderId")]
+        [JsonPropertyName("orderId")]
         public Guid Id { get; set; }
 
-        [JsonProperty("orderStatusType")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("orderStatusType")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrOrderStatus OrderStatus { get; set; }
 
-        [JsonProperty("currencyPair")]
+        [JsonPropertyName("currencyPair")]
         public Currencypair Symbol { get; set; }
 
-        [JsonProperty("originalPrice")]
+        [JsonPropertyName("originalPrice")]
         public decimal OriginalPrice { get; set; }
 
-        [JsonProperty("remainingQuantity")]
+        [JsonPropertyName("remainingQuantity")]
         public decimal RemainingQuantity { get; set; }
 
-        [JsonProperty("originalQuantity")]
+        [JsonPropertyName("originalQuantity")]
         public decimal OriginalQuantity { get; set; }
 
-        [JsonProperty("orderSide")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("orderSide")]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public ValrOrderSide Side { get; set; }
 
-        [JsonProperty("orderType")]
+        [JsonPropertyName("orderType")]
         public ValrOrderType OrderType { get; set; }
 
-        [JsonProperty("failedReason")]
+        [JsonPropertyName("failedReason")]
         public string? FailedReason { get; set; }
 
-        [JsonProperty("orderUpdatedAt")]
+        [JsonPropertyName("orderUpdatedAt")]
         public DateTime Updated { get; set; }
 
-        [JsonProperty("orderCreatedAt")]
+        [JsonPropertyName("orderCreatedAt")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("customerOrderId")]
+        [JsonPropertyName("customerOrderId")]
         public string? CustomerOrderId { get; set; }
 
         public decimal QuantityFilled => OriginalQuantity - RemainingQuantity;
