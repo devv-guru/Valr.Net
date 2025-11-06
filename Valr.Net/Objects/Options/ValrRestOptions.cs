@@ -1,29 +1,45 @@
-using System;
-using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Options;
 
 namespace Valr.Net.Objects.Options
 {
-    // Replace the previous minimal facade with a thin subclass of the real RestApiClientOptions from CryptoExchange.Net 9.x
-    public class ValrRestOptions : RestApiClientOptions
+    /// <summary>
+    /// Options for the ValrRestClient
+    /// </summary>
+    public class ValrRestOptions : RestExchangeOptions<ValrEnvironment>
     {
-        public static ValrRestOptions Default { get; set; } = new ValrRestOptions();
+        /// <summary>
+        /// Default options for new clients
+        /// </summary>
+        internal static ValrRestOptions Default { get; set; } = new ValrRestOptions()
+        {
+            Environment = ValrEnvironment.Live,
+            AutoTimestamp = true
+        };
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public ValrRestOptions()
+        {
+            Default?.Set(this);
+        }
+
+        /// <summary>
+        /// The default receive window for requests
+        /// </summary>
         public TimeSpan ReceiveWindow { get; set; } = TimeSpan.FromSeconds(5);
 
-        public ValrRestOptions() : base()
+        /// <summary>
+        /// Spot API options
+        /// </summary>
+        public ValrRestApiOptions SpotOptions { get; private set; } = new ValrRestApiOptions();
+
+        internal ValrRestOptions Set(ValrRestOptions targetOptions)
         {
+            targetOptions = base.Set<ValrRestOptions>(targetOptions);
+            targetOptions.ReceiveWindow = ReceiveWindow;
+            targetOptions.SpotOptions = SpotOptions.Set(targetOptions.SpotOptions);
+            return targetOptions;
         }
-
-        internal ValrRestOptions(ValrClientOptions baseOptions) : base()
-        {
-            if (baseOptions == null)
-                return;
-
-            ReceiveWindow = baseOptions.ReceiveWindow;
-            AutoTimestamp = baseOptions.SpotApiOptions.AutoTimestamp;
-            TimestampRecalculationInterval = baseOptions.SpotApiOptions.TimestampRecalculationInterval;
-        }
-
-        internal ValrRestOptions(string baseAddress) : base(baseAddress) { }
     }
 }

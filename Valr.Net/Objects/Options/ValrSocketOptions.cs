@@ -1,39 +1,45 @@
-using System;
-using CryptoExchange.Net.Objects;
+using CryptoExchange.Net.Objects.Options;
 
 namespace Valr.Net.Objects.Options
 {
-    // TODO: This is a migration stub. When upgrading to CryptoExchange.Net 9.x,
-    // this class should inherit from the new SocketExchangeOptions<T> / SocketClientOptions
-    // types and map existing `ValrSocketClientOptions` properties into the new option model.
-
     /// <summary>
-    /// New socket options surface for Valr clients (stub).
+    /// Options for the ValrSocketClient
     /// </summary>
-    public class ValrSocketOptions : BaseSocketClientOptions
+    public class ValrSocketOptions : SocketExchangeOptions<ValrEnvironment>
     {
-        // TODO: inherit from appropriate CryptoExchange.Net 9.x base type
-
         /// <summary>
-        /// Default socket options instance placeholder
+        /// Default options for new clients
         /// </summary>
-        public static ValrSocketOptions Default { get; set; } = new ValrSocketOptions();
-
-        /// <summary>
-        /// Socket subscription combine target (maps from old option)
-        /// </summary>
-        public int SocketSubscriptionsCombineTarget { get; set; } = 10;
-
-        // TODO: add mapping constructors from existing `ValrSocketClientOptions`
-
-        public ValrSocketOptions() : base() { }
-
-        internal ValrSocketOptions(ValrSocketClientOptions baseOptions) : base()
+        internal static ValrSocketOptions Default { get; set; } = new ValrSocketOptions()
         {
-            if (baseOptions == null)
-                return;
+            Environment = ValrEnvironment.Live,
+            SocketSubscriptionsCombineTarget = 10
+        };
 
-            SocketSubscriptionsCombineTarget = baseOptions.SocketSubscriptionsCombineTarget;
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public ValrSocketOptions()
+        {
+            Default?.Set(this);
+        }
+
+        /// <summary>
+        /// Options for the Spot Streams API
+        /// </summary>
+        public ValrSocketApiOptions SpotStreamsOptions { get; private set; } = new ValrSocketApiOptions();
+
+        /// <summary>
+        /// Options for the General Streams API
+        /// </summary>
+        public ValrSocketApiOptions GeneralStreamsOptions { get; private set; } = new ValrSocketApiOptions();
+
+        internal ValrSocketOptions Set(ValrSocketOptions targetOptions)
+        {
+            targetOptions = base.Set<ValrSocketOptions>(targetOptions);
+            targetOptions.SpotStreamsOptions = SpotStreamsOptions.Set(targetOptions.SpotStreamsOptions);
+            targetOptions.GeneralStreamsOptions = GeneralStreamsOptions.Set(targetOptions.GeneralStreamsOptions);
+            return targetOptions;
         }
     }
 }

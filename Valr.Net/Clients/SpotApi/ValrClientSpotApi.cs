@@ -1,8 +1,8 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.CommonObjects;
 using CryptoExchange.Net.Interfaces.CommonClients;
-using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
@@ -16,15 +16,16 @@ namespace Valr.Net.Clients.SpotApi
 {
     public class ValrClientSpotApi : RestApiClient, IValrClientSpotApi, ISpotClient
     {
-        #region fields 
-        private readonly ValrClient _baseClient;
-        internal new readonly ValrClientOptions Options;
+        #region fields
+        /// <inheritdoc />
+        public new ValrRestApiOptions ApiOptions => (ValrRestApiOptions)base.ApiOptions;
+        /// <inheritdoc />
+        public new ValrRestOptions ClientOptions => (ValrRestOptions)base.ClientOptions;
 
+        private readonly ValrClient _baseClient;
         internal DateTime? LastExchangeInfoUpdate;
 
         internal static TimeSyncState TimeSyncState = new TimeSyncState("Spot Api");
-
-        private readonly Log _log;
         #endregion
 
         #region Api clients
@@ -48,14 +49,13 @@ namespace Valr.Net.Clients.SpotApi
         /// </summary>
         public event Action<OrderId>? OnOrderCanceled;
 
-        public ValrClientSpotApi(Log log, ValrClient baseClient, ValrClientOptions options) : base(options, options.SpotApiOptions)
+        internal ValrClientSpotApi(ILogger logger, HttpClient? httpClient, ValrClient baseClient, ValrRestOptions options)
+            : base(logger, httpClient, options.Environment.SpotRestAddress, options, options.SpotOptions)
         {
-            _log = log;
             _baseClient = baseClient;
-            Options = options;
 
-            Spot = new ValrClientSpotApiTrading(log, this);
-            InstantTrade = new ValrClientSpotApiInstantTrading(log, this);
+            Spot = new ValrClientSpotApiTrading(_logger, this);
+            InstantTrade = new ValrClientSpotApiInstantTrading(_logger, this);
         }
 
         /// <inheritdoc />
@@ -72,10 +72,10 @@ namespace Valr.Net.Clients.SpotApi
             Dictionary<string, object>? parameters = null, bool signed = false, HttpMethodParameterPosition? postPosition = null,
             ArrayParametersSerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
         {
-            var result = await _baseClient.SendRequestInternal<T>(this, uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit: ignoreRateLimit).ConfigureAwait(false);
-            if (!result && result.Error!.Code == -1021 && Options.SpotApiOptions.AutoTimestamp)
+            var result = await SendRequestAsync<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, requestWeight: weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);
+            if (!result && result.Error!.Code == -1021 && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
-                _log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 TimeSyncState.LastSyncTime = DateTime.MinValue;
             }
             return result;
@@ -85,10 +85,10 @@ namespace Valr.Net.Clients.SpotApi
             Dictionary<string, object>? parameters = null, bool signed = false, HttpMethodParameterPosition? postPosition = null,
             ArrayParametersSerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false)
         {
-            var result = await _baseClient.SendRequestInternal(this, uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit: ignoreRateLimit).ConfigureAwait(false);
-            if (!result && result.Error!.Code == -1021 && Options.SpotApiOptions.AutoTimestamp)
+            var result = await SendRequestAsync(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, requestWeight: weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);
+            if (!result && result.Error!.Code == -1021 && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
-                _log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 TimeSyncState.LastSyncTime = DateTime.MinValue;
             }
             return result;
@@ -102,11 +102,11 @@ namespace Valr.Net.Clients.SpotApi
             => _baseClient.GeneralApi.ExchangeData.GetServerTimeAsync();
 
         /// <inheritdoc />
-        protected override TimeSyncInfo GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, TimeSyncState);
+        public override TimeSyncInfo? GetTimeSyncInfo()
+            => new TimeSyncInfo(_logger, (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp), (ApiOptions.TimestampRecalculationInterval ?? ClientOptions.TimestampRecalculationInterval), TimeSyncState);
 
         /// <inheritdoc />
-        public override TimeSpan GetTimeOffset()
+        public override TimeSpan? GetTimeOffset()
             => TimeSyncState.TimeOffset;
 
         /// <inheritdoc />

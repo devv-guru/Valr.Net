@@ -1,8 +1,9 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.GeneralApi;
@@ -15,22 +16,23 @@ namespace Valr.Net.Clients.GeneralApi
     internal class ValrSocketClientGeneralStreams : SocketApiClient, IValrSocketClientGeneralStreams
     {
         #region fields
+        /// <inheritdoc />
+        public new ValrSocketOptions ClientOptions => (ValrSocketOptions)base.ClientOptions;
+        /// <inheritdoc />
+        public new ValrSocketApiOptions ApiOptions => (ValrSocketApiOptions)base.ApiOptions;
+
         private readonly ValrSocketClient _baseClient;
-        private readonly Log _log;
-        private readonly ValrSocketClientOptions _options;
         #endregion
 
         #region constructor/destructor
 
         /// <summary>
-        /// Create a new instance of ValrSocketClientGeneral with default options
+        /// Create a new instance of ValrSocketClientGeneralStreams
         /// </summary>
-        public ValrSocketClientGeneralStreams(Log log, ValrSocketClient baseClient, ValrSocketClientOptions options) :
-            base(options, options.GeneralStreamsOptions)
+        internal ValrSocketClientGeneralStreams(ILogger logger, ValrSocketClient baseClient, ValrSocketOptions options)
+            : base(logger, options, options.GeneralStreamsOptions)
         {
             _baseClient = baseClient;
-            _log = log;
-            _options = options;
         }
         #endregion
 
@@ -159,7 +161,7 @@ namespace Valr.Net.Clients.GeneralApi
         /// <returns></returns>
         protected async Task<CallResult<UpdateSubscription>> Subscribe<T>(Action<DataEvent<T>> onData, CancellationToken ct, bool authenticated = false)
         {
-            return await _baseClient.SubscribeInternalNoRequest(this, _options.GeneralStreamsOptions.BaseAddress, onData, ct, authenticated).ConfigureAwait(false);
+            return await _baseClient.SubscribeInternalNoRequest(this, ApiOptions.BaseAddress, onData, ct, authenticated).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

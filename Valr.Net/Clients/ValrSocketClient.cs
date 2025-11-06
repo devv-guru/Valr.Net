@@ -3,6 +3,7 @@ using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.WebSockets;
@@ -25,16 +26,26 @@ namespace Valr.Net.Clients
         #endregion
 
         /// <summary>
-        /// Create a new instance of ValrSocketClientSpot with default options
+        /// Create a new instance of ValrSocketClient using provided options
         /// </summary>
-        public ValrSocketClient() : this(ValrSocketClientOptions.Default)
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public ValrSocketClient(Action<ValrSocketOptions>? optionsDelegate = null)
+            : this(Options.Create(ApplyOptionsDelegate(optionsDelegate)), null)
         {
         }
 
-        public ValrSocketClient(ValrSocketClientOptions options) : base("Valr", options)
+        /// <summary>
+        /// Create a new instance of ValrSocketClient
+        /// </summary>
+        /// <param name="options">Option configuration</param>
+        /// <param name="loggerFactory">The logger factory</param>
+        public ValrSocketClient(IOptions<ValrSocketOptions> options, ILoggerFactory? loggerFactory = null)
+            : base(loggerFactory, "Valr")
         {
-            SpotStreams = new ValrSocketClientSpotStreams(log, this, options);
-            GeneralStreams = new ValrSocketClientGeneralStreams(log, this, options);
+            Initialize(options.Value);
+
+            SpotStreams = AddApiClient(new ValrSocketClientSpotStreams(_logger, this, options.Value));
+            GeneralStreams = AddApiClient(new ValrSocketClientGeneralStreams(_logger, this, options.Value));
 
             AddGenericHandler("Pong", (messageEvent) => { });
 
@@ -51,10 +62,10 @@ namespace Valr.Net.Clients
         /// <summary>
         /// Set the default options to be used when creating new clients
         /// </summary>
-        /// <param name="options">Options to use as default</param>
-        public static void SetDefaultOptions(ValrSocketClientOptions options)
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public static void SetDefaultOptions(Action<ValrSocketOptions> optionsDelegate)
         {
-            ValrSocketClientOptions.Default = options;
+            ValrSocketOptions.Default = ApplyOptionsDelegate(optionsDelegate);
         }
 
         internal CallResult<T> DeserializeInternal<T>(JsonElement obj, JsonSerializer? serializer = null, int? requestId = null)

@@ -1,6 +1,6 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using Microsoft.Extensions.Logging;
 using Valr.Net.Clients.SpotApi;
@@ -12,9 +12,12 @@ namespace Valr.Net.Clients.PayApi
     public class ValrClientPayApi : RestApiClient, IValrClientPayApi
     {
         #region fields
-        private readonly Log _log;
+        /// <inheritdoc />
+        public new ValrRestApiOptions ApiOptions => (ValrRestApiOptions)base.ApiOptions;
+        /// <inheritdoc />
+        public new ValrRestOptions ClientOptions => (ValrRestOptions)base.ClientOptions;
+
         private readonly ValrClient _baseClient;
-        internal new readonly ValrClientOptions Options;
         #endregion
 
         #region Api clients
@@ -23,13 +26,12 @@ namespace Valr.Net.Clients.PayApi
         #endregion
 
         #region constructor/destructor
-        public ValrClientPayApi(Log log, ValrClient baseClient, ValrClientOptions options) : base(options, options.PayApiOptions)
+        internal ValrClientPayApi(ILogger logger, HttpClient? httpClient, ValrClient baseClient, ValrRestOptions options)
+            : base(logger, httpClient, options.Environment.SpotRestAddress, options, options.SpotOptions)
         {
-            Options = options;
             _baseClient = baseClient;
-            _log = log;
 
-            VarlPay = new ValrClientPayApiValrPay(log, this);
+            VarlPay = new ValrClientPayApiValrPay(_logger, this);
         }
         #endregion
 
@@ -42,19 +44,19 @@ namespace Valr.Net.Clients.PayApi
             Dictionary<string, object>? parameters = null, bool signed = false, HttpMethodParameterPosition? postPosition = null,
             ArrayParametersSerialization? arraySerialization = null, int weight = 1, bool ignoreRateLimit = false) where T : class
         {
-            var result = await _baseClient.SendRequestInternal<T>(this, uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, weight, ignoreRateLimit: ignoreRateLimit).ConfigureAwait(false);
-            if (!result && result.Error!.Code == -1021 && Options.SpotApiOptions.AutoTimestamp)
+            var result = await SendRequestAsync<T>(uri, method, cancellationToken, parameters, signed, postPosition, arraySerialization, requestWeight: weight, ignoreRatelimit: ignoreRateLimit).ConfigureAwait(false);
+            if (!result && result.Error!.Code == -1021 && (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp))
             {
-                _log.Write(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
+                _logger.Log(LogLevel.Debug, "Received Invalid Timestamp error, triggering new time sync");
                 ValrClientSpotApi.TimeSyncState.LastSyncTime = DateTime.MinValue;
             }
             return result;
         }
 
-        protected override TimeSyncInfo GetTimeSyncInfo() =>
-            new TimeSyncInfo(_log, Options.SpotApiOptions.AutoTimestamp, Options.SpotApiOptions.TimestampRecalculationInterval, ValrClientSpotApi.TimeSyncState);
+        public override TimeSyncInfo? GetTimeSyncInfo() =>
+            new TimeSyncInfo(_logger, (ApiOptions.AutoTimestamp ?? ClientOptions.AutoTimestamp), (ApiOptions.TimestampRecalculationInterval ?? ClientOptions.TimestampRecalculationInterval), ValrClientSpotApi.TimeSyncState);
 
-        public override TimeSpan GetTimeOffset() => ValrClientSpotApi.TimeSyncState.TimeOffset;
+        public override TimeSpan? GetTimeOffset() => ValrClientSpotApi.TimeSyncState.TimeOffset;
 
         protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync() =>
             _baseClient.GeneralApi.ExchangeData.GetServerTimeAsync();

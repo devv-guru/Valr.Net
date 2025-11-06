@@ -1,8 +1,9 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Valr.Net.Enums;
 using Valr.Net.Interfaces.Clients.SpotApi;
@@ -15,22 +16,23 @@ namespace Valr.Net.Clients.SpotApi
     public class ValrSocketClientSpotStreams : SocketApiClient, IValrSocketClientSpotStreams
     {
         #region fields
+        /// <inheritdoc />
+        public new ValrSocketOptions ClientOptions => (ValrSocketOptions)base.ClientOptions;
+        /// <inheritdoc />
+        public new ValrSocketApiOptions ApiOptions => (ValrSocketApiOptions)base.ApiOptions;
+
         private readonly ValrSocketClient _baseClient;
-        private readonly Log _log;
-        private readonly ValrSocketClientOptions _options;
         #endregion
 
         #region constructor/destructor
 
         /// <summary>
-        /// Create a new instance of ValrSocketClientSpotStreams with default options
+        /// Create a new instance of ValrSocketClientSpotStreams
         /// </summary>
-        public ValrSocketClientSpotStreams(Log log, ValrSocketClient baseClient, ValrSocketClientOptions options) :
-            base(options, options.GeneralStreamsOptions)
+        internal ValrSocketClientSpotStreams(ILogger logger, ValrSocketClient baseClient, ValrSocketOptions options)
+            : base(logger, options, options.SpotStreamsOptions)
         {
             _baseClient = baseClient;
-            _log = log;
-            _options = options;
         }
 
         public async Task<CallResult<UpdateSubscription>> SubscribeToAggregateOrderbookUpdatesAsync(string[] symbol, Action<DataEvent<InboundStreamPayload<AggregateOrderBookData>>> stringHandler, CancellationToken ct = default)
@@ -92,7 +94,7 @@ namespace Valr.Net.Clients.SpotApi
 
         protected async Task<CallResult<UpdateSubscription>> Subscribe<T>(ValrSocketOutboundEvent _event, string[] symbol, Action<DataEvent<T>> onData, CancellationToken ct, bool authenticated = false)
         {
-            return await _baseClient.SubscribeInternal(this, _options.SpotStreamsOptions.BaseAddress, _event, symbol, onData, ct, authenticated).ConfigureAwait(false);
+            return await _baseClient.SubscribeInternal(this, ApiOptions.BaseAddress, _event, symbol, onData, ct, authenticated).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

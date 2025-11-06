@@ -1,5 +1,6 @@
 ﻿using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using System.Text.Json;
 using System.Security.Cryptography;
@@ -24,29 +25,46 @@ namespace Valr.Net
             encryptor = new HMACSHA512(Encoding.UTF8.GetBytes(credentials.Secret.GetString()));
         }
 
-        public override void AuthenticateRequest(RestApiClient apiClient, Uri uri, HttpMethod method,
-            Dictionary<string, object> providedParameters, bool auth, ArrayParametersSerialization arraySerialization,
-            HttpMethodParameterPosition parameterPosition, out SortedDictionary<string, object> uriParameters,
-            out SortedDictionary<string, object> bodyParameters, out Dictionary<string, string> headers)
+        public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
         {
-            uriParameters = parameterPosition == HttpMethodParameterPosition.InUri ? new SortedDictionary<string, object>(providedParameters) : new SortedDictionary<string, object>();
-            bodyParameters = parameterPosition == HttpMethodParameterPosition.InBody ? new SortedDictionary<string, object>(providedParameters) : new SortedDictionary<string, object>();
-            headers = new Dictionary<string, string>();
+            // Add API key header
+            request.Headers.Add("X-VALR-API-KEY", ApiKey);
 
-            if (!auth)
+            if (!request.Authenticated)
                 return;
 
             var timestamp = string.IsNullOrEmpty(_testTimeStamp) ? GetTimestamp() : _testTimeStamp;
 
-            headers.Add("X-VALR-API-KEY", Credentials.Key.GetString());
+            // Add timestamp header
+            request.Headers.Add("X-VALR-TIMESTAMP", timestamp);
 
-            headers.Add("X-VALR-SIGNATURE", SignRequest(timestamp, method.Method, uri.PathAndQuery, _subAccountId,
-                providedParameters));
-            headers.Add("X-VALR-TIMESTAMP", timestamp);
+            // Get the HTTP method and path
+            var method = request.Method.ToString();
+            var path = request.Uri.PathAndQuery;
 
+            // Get parameters based on position
+            var parameters = request.GetPositionParameters();
+
+            // Build signature based on parameter position
+            string signature;
+            if (request.ParameterPosition == HttpMethodParameterPosition.InUri)
+            {
+                // For GET/DELETE requests with query parameters
+                signature = SignRequest(timestamp, method, path, _subAccountId, parameters.Count > 0 ? parameters : null);
+            }
+            else
+            {
+                // For POST/PUT requests with body parameters
+                signature = SignRequest(timestamp, method, path, _subAccountId, request.BodyParameters.Count > 0 ? request.BodyParameters : null);
+            }
+
+            // Add signature header
+            request.Headers.Add("X-VALR-SIGNATURE", signature);
+
+            // Add sub-account ID header if provided
             if (!string.IsNullOrEmpty(_subAccountId))
             {
-                headers.Add("X-VALR-SUB-ACCOUNT-ID", _subAccountId);
+                request.Headers.Add("X-VALR-SUB-ACCOUNT-ID", _subAccountId);
             }
         }
 

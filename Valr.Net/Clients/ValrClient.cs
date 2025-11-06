@@ -1,5 +1,7 @@
 ﻿using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Valr.Net.Clients.GeneralApi;
 using Valr.Net.Clients.PayApi;
@@ -26,35 +28,38 @@ namespace Valr.Net.Clients
 
         #region constructor/destructor
         /// <summary>
-        /// Create a new instance of ValrClient using the default options
+        /// Create a new instance of ValrClient using provided options
         /// </summary>
-        public ValrClient() : this(ValrClientOptions.Default)
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public ValrClient(Action<ValrRestOptions>? optionsDelegate = null)
+            : this(null, null, Options.Create(ApplyOptionsDelegate(optionsDelegate)))
         {
         }
 
         /// <summary>
-        /// Create a new instance of ValrClient using provided options
+        /// Create a new instance of ValrClient
         /// </summary>
-        /// <param name="options">The options to use for this client</param>
-        public ValrClient(ValrClientOptions options) : base("Valr", options)
+        /// <param name="httpClient">Http client for this client</param>
+        /// <param name="loggerFactory">The logger factory</param>
+        /// <param name="options">Option configuration</param>
+        public ValrClient(HttpClient? httpClient, ILoggerFactory? loggerFactory, IOptions<ValrRestOptions> options)
+            : base(loggerFactory, "Valr")
         {
-            GeneralApi = AddApiClient(new ValrClientGeneralApi(log, this, options));
-            SpotApi = AddApiClient(new ValrClientSpotApi(log, this, options));
-            PaymentApi = AddApiClient(new ValrClientPayApi(log, this, options));
+            Initialize(options.Value);
 
-            //requestBodyEmptyContent = "";
-            //requestBodyFormat = RequestBodyFormat.Json;
-            //arraySerialization = ArrayParametersSerialization.MultipleValues;
+            GeneralApi = AddApiClient(new ValrClientGeneralApi(_logger, httpClient, this, options.Value));
+            SpotApi = AddApiClient(new ValrClientSpotApi(_logger, httpClient, this, options.Value));
+            PaymentApi = AddApiClient(new ValrClientPayApi(_logger, httpClient, this, options.Value));
         }
         #endregion
 
         /// <summary>
         /// Set the default options to be used when creating new clients
         /// </summary>
-        /// <param name="options">Options to use as default</param>
-        public static void SetDefaultOptions(ValrClientOptions options)
+        /// <param name="optionsDelegate">Option configuration delegate</param>
+        public static void SetDefaultOptions(Action<ValrRestOptions> optionsDelegate)
         {
-            ValrClientOptions.Default = options;
+            ValrRestOptions.Default = ApplyOptionsDelegate(optionsDelegate);
         }
 
         /// <inheritdoc />

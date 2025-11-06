@@ -1,16 +1,82 @@
+using CryptoExchange.Net.Objects;
+using Valr.Net.Objects;
+
 namespace Valr.Net.Objects.Options
 {
-    // TODO: Replacement for ValrApiAddresses to model environment endpoints in a way that maps
-    // to CryptoExchange.Net 9.x ApiClient / Environment patterns.
-
-    public class ValrEnvironment
+    /// <summary>
+    /// Valr environments
+    /// </summary>
+    public class ValrEnvironment : TradeEnvironment
     {
-        public string RestClientAddress { get; set; } = "https://api.valr.com";
-        public string SpotSocketClientAddress { get; set; } = "wss://ws.valr.com/spot";
-        public string GeneralSocketClientAddress { get; set; } = "wss://ws.valr.com/general";
+        /// <summary>
+        /// Spot Rest API address
+        /// </summary>
+        public string SpotRestAddress { get; }
 
-        public static ValrEnvironment Default { get; } = new ValrEnvironment();
+        /// <summary>
+        /// Spot WebSocket address (trade streams)
+        /// </summary>
+        public string SpotSocketAddress { get; }
 
-        // TODO: Add constructors/factories for Test/Sandbox/Custom environments
+        /// <summary>
+        /// General WebSocket address (account streams)
+        /// </summary>
+        public string GeneralSocketAddress { get; }
+
+        /// <summary>
+        /// ctor for DI, use <see cref="CreateCustom"/> for creating a custom environment
+        /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        public ValrEnvironment() : base(TradeEnvironmentNames.Live)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        { }
+
+        /// <summary>
+        /// Get the Valr environment by name
+        /// </summary>
+        public static ValrEnvironment? GetEnvironmentByName(string? name)
+         => name switch
+         {
+             TradeEnvironmentNames.Live => Live,
+             "" => Live,
+             null => Live,
+             _ => default
+         };
+
+        internal ValrEnvironment(
+            string name,
+            string spotRestAddress,
+            string spotSocketAddress,
+            string generalSocketAddress) :
+            base(name)
+        {
+            SpotRestAddress = spotRestAddress;
+            SpotSocketAddress = spotSocketAddress;
+            GeneralSocketAddress = generalSocketAddress;
+        }
+
+        /// <summary>
+        /// Available environment names
+        /// </summary>
+        public static string[] All => [Live.Name];
+
+        /// <summary>
+        /// Live environment
+        /// </summary>
+        public static ValrEnvironment Live { get; }
+            = new ValrEnvironment(TradeEnvironmentNames.Live,
+                                 ValrApiAddresses.Default.RestClientAddress,
+                                 ValrApiAddresses.Default.SpotSocketClientAddress,
+                                 ValrApiAddresses.Default.GeneralSocketClientAddress);
+
+        /// <summary>
+        /// Create a custom environment
+        /// </summary>
+        public static ValrEnvironment CreateCustom(
+                        string name,
+                        string spotRestAddress,
+                        string spotSocketAddress,
+                        string generalSocketAddress)
+            => new ValrEnvironment(name, spotRestAddress, spotSocketAddress, generalSocketAddress);
     }
 }
